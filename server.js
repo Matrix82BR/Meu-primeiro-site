@@ -47,7 +47,7 @@ function readBody(request) {
 }
 
 function serveFile(request, response) {
-    const requestedPath = request.url === '/' ? '/index.html' : request.url.split('?')[0];
+    const requestedPath = request.url.split('?')[0] === '/' ? '/index.html' : request.url.split('?')[0];
     const protectedFiles = ['/server.js', '/data.json', '/package.json'];
     if (protectedFiles.includes(requestedPath)) {
         sendJson(response, 404, { error: 'Pagina nao encontrada.' });
