@@ -1,0 +1,37 @@
+{
+  "users": [
+    {
+      "login": "admin",
+      "password": "1234",
+      "name": "Administrador"
+    },
+    {
+      "login": "uninter",
+      "password": "1234",
+      "name": "Usuario Uninter"
+    }
+  ],
+  "products": [
+    {
+      "id": 1,
+      "name": "Notebook Pro",
+      "category": "Eletronicos",
+      "price": 3499.9,
+      "featured": true
+    },
+    {
+      "id": 2,
+      "name": "Fone sem fio",
+      "category": "Eletronicos",
+      "price": 249.9,
+      "featured": true
+    },
+    {
+      "id": 3,
+      "name": "Luminaria de mesa",
+      "category": "Casa",
+      "price": 129.9,
+      "featured": false
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Pagina interna</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <nav class="menu-principal" aria-label="Menu principal">
+            <details class="menu-dropdown">
+                <summary>Produtos</summary>
+                <div class="submenu">
+                    <a href="#produtos">Todos os produtos</a>
+                    <a href="#destaques">Destaques</a>
+                </div>
+            </details>
+            <details class="menu-dropdown">
+                <summary>Classes de produtos</summary>
+                <div class="submenu">
+                    <a href="#eletronicos">Eletronicos</a>
+                    <a href="#casa">Casa</a>
+                </div>
+            </details>
+            <a href="#perfil">Perfil</a>
+            <a href="index.html">Sair</a>
+        </nav>
+
+        <main class="pagina-interna">
+            <section id="produtos">
+                <h1>Produtos</h1>
+                <p>Confira os produtos disponiveis.</p>
+                <div id="lista-produtos" class="lista-produtos"></div>
+            </section>
+
+            <section id="destaques">
+                <h2>Destaques</h2>
+                <p>Produtos selecionados para voce.</p>
+            </section>
+
+            <section id="eletronicos">
+                <h2>Eletronicos</h2>
+                <p>Celulares, computadores e acessorios.</p>
+            </section>
+
+            <section id="casa">
+                <h2>Casa</h2>
+                <p>Produtos para deixar sua casa mais confortavel.</p>
+            </section>
+
+            <section id="perfil">
+                <h2>Perfil</h2>
+                <p id="usuario-logado">Carregando usuario...</p>
+            </section>
+        </main>
+
+        <script>
+            const menus = document.querySelectorAll('.menu-dropdown');
+            const listaProdutos = document.getElementById('lista-produtos');
+            const usuarioLogado = document.getElementById('usuario-logado');
+
+            menus.forEach(function (menuAtual) {
+                menuAtual.addEventListener('toggle', function () {
+                    if (menuAtual.open) {
+                        menus.forEach(function (outroMenu) {
+                            if (outroMenu !== menuAtual) {
+                                outroMenu.removeAttribute('open');
+                            }
+                        });
+                    }
+                });
+            });
+
+            document.querySelector('a[href="index.html"]').addEventListener('click', async function (evento) {
+                evento.preventDefault();
+                await fetch('/api/logout', { method: 'POST' });
+                window.location.href = '/';
+            });
+
+            async function carregarPagina() {
+                const sessao = await fetch('/api/session');
+                if (!sessao.ok) {
+                    window.location.href = '/';
+                    return;
+                }
+
+                const dadosSessao = await sessao.json();
+                usuarioLogado.textContent = `Usuario: ${dadosSessao.user.name}`;
+
+                const respostaProdutos = await fetch('/api/products');
+                const dadosProdutos = await respostaProdutos.json();
+                listaProdutos.innerHTML = dadosProdutos.products.map(function (produto) {
+                    return `<article class="produto"><h3>${produto.name}</h3><p>${produto.category}</p><strong>R$ ${produto.price.toFixed(2).replace('.', ',')}</strong></article>`;
+                }).join('');
+            }
+
+            carregarPagina();
+        </script>
+    </body>
+</html>

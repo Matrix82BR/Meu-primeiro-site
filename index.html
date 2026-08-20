@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link rel="stylesheet" href="index.css">
+    </head>
+    <body>
+        <h1>Meu primeiro site</h1>
+        <form class="login-menu" id="login-form">
+            <label for="login">Login</label>
+            <input type="text" id="login" name="login" required>
+
+            <label for="senha">Senha</label>
+            <input type="password" id="senha" name="senha" required>
+
+            <button type="submit">Entrar</button>
+            <p id="mensagem-login" aria-live="polite"></p>
+        </form>
+
+        <script>
+            const formulario = document.getElementById('login-form');
+            const mensagem = document.getElementById('mensagem-login');
+
+            formulario.addEventListener('submit', async function (evento) {
+                evento.preventDefault();
+
+                const login = document.getElementById('login').value.trim().toLowerCase();
+                const senha = document.getElementById('senha').value;
+
+                const resposta = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ login, senha })
+                });
+
+                if (!resposta.ok) {
+                    mensagem.textContent = 'Login ou senha incorretos.';
+                    mensagem.className = 'erro';
+                    return;
+                }
+
+                window.location.href = '/pagina-interna.html';
+            });
+        </script>
+    </body>
+</html>
